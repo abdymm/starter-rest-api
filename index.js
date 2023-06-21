@@ -37,8 +37,9 @@ app.get("/travels", async (req, res) => {
         Item: item,
       },
     }))
-    const result = await dynamoDB.batchWrite(items)
-    console.log("Bulk insert result:", result)
+    console.log("Bulk insert result - items:", items)
+    // const result = await dynamoDB.batchWrite(items)
+    // console.log("Bulk insert result:", result)
     res.json(response.data).end()
   } catch (error) {
     res.json(error).end()
