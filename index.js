@@ -20,6 +20,31 @@ app.use(express.urlencoded({ extended: true }))
 // app.use(express.static('public', options))
 // #############################################################################
 
+// Get a travels
+app.get("/travels", async (req, res) => {
+  // Make a request for a user with a given ID
+  try {
+    const response = await axios.get(
+      "https://simpu.kemenag.go.id/apps/api/travel"
+    )
+
+    const travels = response.data.travel
+
+    // handle success
+    const items = travels.map((item) => ({
+      Put: {
+        TableName: "clever-overallsCyclicDB",
+        Item: item,
+      },
+    }))
+    const result = await dynamoDB.batchWrite(items)
+    console.log("Bulk insert result:", result)
+    res.json(response.data).end()
+  } catch (error) {
+    res.json(error).end()
+  }
+})
+
 // Create or Update an item
 app.post("/:col/:key", async (req, res) => {
   console.log(req.body)
@@ -31,6 +56,7 @@ app.post("/:col/:key", async (req, res) => {
       req.params
     )}`
   )
+
   const item = await db.collection(col).set(key, req.body)
   console.log(JSON.stringify(item, null, 2))
   res.json(item).end()
@@ -62,26 +88,6 @@ app.get("/:col/:key", async (req, res) => {
   const item = await db.collection(col).get(key)
   console.log(JSON.stringify(item, null, 2))
   res.json(item).end()
-})
-
-// Get a travels
-app.get("/travels", async (req, res) => {
-  // Make a request for a user with a given ID
-  axios
-    .get("https://simpu.kemenag.go.id/apps/api/travel")
-    .then(function (response) {
-      console.log('response', response.data)
-      // handle success
-      res.json(response.data).end()
-    })
-    .catch(function (error) {
-      // handle error
-      res.json(error).end()
-    })
-    .finally(function () {
-      // always executed
-    })
-
 })
 
 // Get a full listing
