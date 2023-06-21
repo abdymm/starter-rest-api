@@ -70,8 +70,9 @@ app.get("/travels", async (req, res) => {
   axios
     .get("https://simpu.kemenag.go.id/apps/api/travel")
     .then(function (response) {
+      console.log('response', response.data)
       // handle success
-      res.json(response).end()
+      res.json(response.data).end()
     })
     .catch(function (error) {
       // handle error
