@@ -27,20 +27,21 @@ app.get("/travels", async (req, res) => {
     const response = await axios.get(
       "https://simpu.kemenag.go.id/apps/api/travel"
     )
-
     const travels = response.data.travel
+    const filteredTravels = travels.filter(
+      (travel) => travel.id === "2225" || travel.id === "2226"
+    )
 
-    // handle success
-    const items = travels.map((item) => ({
-      Put: {
-        TableName: "clever-overallsCyclicDB",
-        Item: item,
-      },
-    }))
-    console.log("Bulk insert result - items:", items)
-    // const result = await dynamoDB.batchWrite(items)
-    // console.log("Bulk insert result:", result)
-    res.json(response.data).end()
+    // const dbPromises = travels.map(async (travel) => {
+    //   // Insert each travel item into the database
+    //   const item = await db.collection('travel').set(travel.id, travel)
+    //   console.log("Inserted item:", item)
+    // })
+
+    // await Promise.all(dbPromises) // Wait for all insertions to complete
+
+    res.json(filteredTravels).end()
+    // res.json(response.data).end()
   } catch (error) {
     res.json(error).end()
   }
