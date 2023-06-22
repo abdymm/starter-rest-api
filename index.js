@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }))
 // #############################################################################
 
 // Get a travels
-app.get("/travels", async (req, res) => {
+app.get("/crawl", async (req, res) => {
   // Make a request for a user with a given ID
   try {
     const response = await axios.get(
@@ -98,7 +98,7 @@ app.get("/:col", async (req, res) => {
   console.log(
     `list collection: ${col} with params: ${JSON.stringify(req.params)}`
   )
-  const items = await db.collection(col).list()
+  const items = await db.collection(col)
   console.log(JSON.stringify(items, null, 2))
   res.json(items).end()
 })
